@@ -1,12 +1,13 @@
 org-js
 ======
 
-Parser and converter for org-mode (<http://orgmode.org/>) notation written in JavaScript.
+Parser for org-mode (<http://orgmode.org/>) notation written in JavaScript. Also provides conversion to HTML (extendable with other converter classes). Forked from https://github.com/mooz/org-js (under the MIT license), modified with additional features, particularly richer parsing of TODOs.
 
 Interactive Editor
 ------------------
 
 For working example, see http://mooz.github.com/org-js/editor/.
+**TODO Copy mooz's example into own working example.**
 
 Installation
 ------------

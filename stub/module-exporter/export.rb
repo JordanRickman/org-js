@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+#TODO I don't know Ruby; rewrite this script in something else? Or rewrite lib/org.js such that it doesn't depend on Node
+
 # Customize this name
 module_name = "Org"
 

@@ -1,0 +1,46 @@
+#+TITLE: org-mode-js Project Planning
+
+* Requirements
+
+** Style Considerations
+
+- No dependencies
+- NodeJS-compatible package
+- Object-oriented
+- but, does not require ES6
+
+** Features
+
+- JSON-serializable document model
+- Edit original text without modifying semantically-meaningless regions (e.g. whitespace)
+- Knows how to...
+    - Create a blank document
+    - Create a node
+    - Delete a node
+    - Edit a node's contents
+    - Edit a node's properties (tags, TODO state, etc.)
+    - Move a node within the document tree
+    - Serialize a node
+    - Serialize a document (including options)
+    - Parse a document (aka import from text)
+    - Import a document from JSON
+    - Export a document to text
+        - If the document was imported from text, export the text, thereby do not change semantically meaningless regions
+        - If the document was imported from JSON, generate the text
+
+* Task Overview
+
+** TODO Rewrite existing model to be JSON-serializable
+** TODO Refactor parser to be more object-oriented
+** TODO Add better support for TODO items and checklists
+** TODO Support editing of original text
+    - [ ] Track cursor position in lexer
+    - [ ] Save bounding positions in model
+    - [ ] Wrap JSON-serializable model and original text in object-oriented OrgDocument class
+    - [ ] Write methods to edit nodes
+** TODO Support creating, deleting, and moving nodes
+** TODO Support import/export JSON
+** TODO Support export to text
+** TODO (Optional) Update HTML conversion feature to work with new model
+
+Would be nice for maintaining that live preview that is currently at [[http://mooz.github.io/org-js/]], but not needed for the contexts in which I'm using the package.

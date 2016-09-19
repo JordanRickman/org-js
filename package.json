@@ -1,7 +1,7 @@
 {
-  "name": "org-parser",
-  "description": "A parser for org-mode notation. Also provides conversion to HTML.",
-  "homepage": "https://github.com/JordanRickman/org-parser-js",
+  "name": "org-mode",
+  "description": "A JavaScript library for parsing and editing org-mode format.",
+  "homepage": "https://github.com/JordanRickman/org-mode-js",
   "bugs": "jordan.rickman.42@gmail.com",
   "keywords": [
     "org-mode",
@@ -25,6 +25,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/JordanRickman/org-parser-js.git"
+    "url": "https://github.com/JordanRickman/org-mode-js.git"
   }
 }

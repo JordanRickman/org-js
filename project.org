@@ -33,6 +33,9 @@
 * Task Overview
 
 ** TODO Rewrite existing model to be JSON-serializable
+    - [X] Write new model
+    - [ ] Update parser.js to use new model
+    - [ ] Subscripts as nodes
 ** TODO Refactor parser to be more object-oriented
 ** TODO Better tests
 ** TODO Add better support for TODO items and checklists

@@ -32,6 +32,7 @@
 
 ** TODO Rewrite existing model to be JSON-serializable
 ** TODO Refactor parser to be more object-oriented
+** TODO Better tests
 ** TODO Add better support for TODO items and checklists
 ** TODO Support editing of original text
     - [ ] Track cursor position in lexer

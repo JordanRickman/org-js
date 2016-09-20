@@ -8,6 +8,8 @@
 - NodeJS-compatible package
 - Object-oriented
 - but, does not require ES6
+- Use JSDoc
+- Fully unit tested
 
 ** Features
 

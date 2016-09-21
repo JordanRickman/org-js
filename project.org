@@ -30,6 +30,17 @@
         - If the document was imported from text, export the text, thereby do not change semantically meaningless regions
         - If the document was imported from JSON, generate the text
 
+** Org-Mode features I will not be supporting
+
+- Tables
+- LaTeX markup
+- Custom numbering on ordered lists
+- Affiliated keywords
+- Node properties and property drawers
+- Footnotes
+- Inline Tasks
+*** TODO Fill in more here as I browse the full syntax specification
+
 * Task Overview
 
 ** TODO Rewrite existing model to be JSON-serializable

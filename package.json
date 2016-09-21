@@ -26,5 +26,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/JordanRickman/org-mode-js.git"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2"
   }
 }

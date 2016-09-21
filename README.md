@@ -3,9 +3,14 @@ org-mode-js
 
 **This project is in pre-alpha, and not yet ready for use.**
 
-A JavaScript library for parsing and editing org-mode format (<http://orgmode.org/>). Available as a standalone file or as a nodejs package.
+A JavaScript library for parsing and editing org-mode format (<http://orgmode.org/>). Compatible with NodeJS or with
+the browser. No dependencies.
 
-Forked from https://github.com/mooz/org-js (under the MIT license), modified with additional features, particularly richer parsing of TODOs.
+Org-mode-js was developed to be used as a backend for an org-mode-compatible hierarchical TODO list manager. Therefore,
+it focuses on supporting all TODO item features. Many org-mode features are not yet supported.
+
+Forked from <https://github.com/mooz/org-js> (under the MIT license), largely rewritten fresh but with lots of code
+copied over from the org-js codebase.
 
 Model
 -----

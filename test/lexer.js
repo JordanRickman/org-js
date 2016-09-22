@@ -14,6 +14,9 @@ describe('Token-matching Regular Expressions', function() {
    * evaluate to undefined and sometimes to the empty string.
    */
   function regExpResultEquals(arr1, arr2) {
+    if (arr1 === null && arr2 === null)
+      return true;
+    if (arr1 === null || arr2 === null)
     if (arr1.length !== arr2.length)
       return false;
     for (var i = 0; i < arr1.length; i++) {
@@ -26,7 +29,7 @@ describe('Token-matching Regular Expressions', function() {
     return true;
   }
 
-  it('should properly parse TODO items', function() {
+  it('should properly match TODO items', function() {
     var todo = tokenRegExps['todo'];
     var execResult;
 
@@ -114,7 +117,7 @@ describe('Token-matching Regular Expressions', function() {
   });
   
 
-  it('should properly parse headers', function() {
+  it('should properly match headers', function() {
     var header = tokenRegExps['header'];
     var execResult;
 
@@ -176,7 +179,7 @@ describe('Token-matching Regular Expressions', function() {
      "Failed on '"+todoItem+"', got:\n["+execResult+"]");
   });
 
-  it('should properly parse dictionary list elements', function() {
+  it('should properly match dictionary list elements', function() {
     var dictionaryListElem = tokenRegExps['dictionaryListElement'];
     var execResult;
 
@@ -277,7 +280,7 @@ describe('Token-matching Regular Expressions', function() {
       "Failed on '"+noSpaceBeforeStar+"', got:\n["+execResult+"]");
   });
 
-  it('should properly parse list elements', function() {
+  it('should properly match list elements', function() {
     var listElem = tokenRegExps['listElement'];
     var execResult;
 
@@ -363,7 +366,7 @@ describe('Token-matching Regular Expressions', function() {
       "Failed on '"+noSpaceBeforeStar+"', got:\n["+execResult+"]");
   });
 
-  it('should properly parse drawer beginnings', function() {
+  it('should properly match drawer beginnings', function() {
     var beginDrawer = tokenRegExps['beginDrawer'];
     var execResult;
 
@@ -419,7 +422,7 @@ describe('Token-matching Regular Expressions', function() {
       "Failed on '"+somethingAfterClosingColon+"', got:\n["+execResult+"]");
   });
 
-  it('should properly parse drawer endings', function() {
+  it('should properly match drawer endings', function() {
     var endDrawer = tokenRegExps['endDrawer'];
     var execResult;
 
@@ -470,7 +473,192 @@ describe('Token-matching Regular Expressions', function() {
       "Failed on '"+somethingAfterClosingColon+"', got:\n["+execResult+"]");
   });
 
-  it('should properly parse preformatted blocks', function() {
+  it('should properly match block beginnings', function() {
+    var beginBlock = tokenRegExps['beginBlock'];
+    var execResult;
+
+    var allComponents = "    #+BEGIN_NAME$123:   params go here -l 4 +a  ";
+    execResult = beginBlock.exec(allComponents);
+    assert(regExpResultEquals(execResult, [allComponents, "    ", "NAME$123:", "params go here -l 4 +a  "]),
+      "Failed on '"+allComponents+"', got:\n["+execResult+"]");
+
+    var noParams = "    #+BEGIN_NAME   ";
+    execResult = beginBlock.exec(noParams);
+    assert(regExpResultEquals(execResult, [noParams, "    ", "NAME", ""]),
+      "Failed on '"+noParams+"', got:\n["+execResult+"]");
+
+    var minimal = "#+BEGIN_NAME";
+    execResult = beginBlock.exec(minimal);
+    assert(regExpResultEquals(execResult, [minimal, "", "NAME", ""]),
+      "Failed on '"+minimal+"', got:\n["+execResult+"]");
+
+    //----- Examples that should not match -----
+    var noName = "    #+BEGIN_   params go here -l 4 +a  ";
+    execResult = beginBlock.exec(noName);
+    assert(execResult === null,
+      "Failed on '"+noName+"', got:\n["+execResult+"]");
+
+    var noPlus = "#BEGIN_NAME   params go here -l 4 +a  ";
+    execResult = beginBlock.exec(noPlus);
+    assert(execResult === null,
+      "Failed on '"+noPlus+"', got:\n["+execResult+"]");
+
+    var noHash = "    +BEGIN_NAME   params go here -l 4 +a  ";
+    execResult = beginBlock.exec(noHash);
+    assert(execResult === null,
+      "Failed on '"+noHash+"', got:\n["+execResult+"]");
+
+    var wrongSeparator = "    #+BEGIN-NAME   params go here -l 4 +a  ";
+    execResult = beginBlock.exec(wrongSeparator);
+    assert(execResult === null,
+      "Failed on '"+wrongSeparator+"', got:\n["+execResult+"]");
+  });
+
+  it('should properly match block endings', function() {
+    var endBlock = tokenRegExps['endBlock'];
+    var execResult;
+
+    var allComponents = "   #+END_NAME$123:  ";
+    execResult = endBlock.exec(allComponents);
+    assert(regExpResultEquals(execResult, [allComponents, "   ", "NAME$123:"]),
+      "Failed on '"+allComponents+"', got:\n["+execResult+"]");
+
+    var minimal = "#+END_N";
+    execResult = endBlock.exec(minimal);
+    assert(regExpResultEquals(execResult, [minimal, "", "N"]),
+      "Failed on '"+minimal+"', got:\n["+execResult+"]");
+
+    //----- Examples that should not match -----
+    var noName = "    #+END_  ";
+    execResult = endBlock.exec(noName);
+    assert(execResult === null,
+      "Failed on '"+noName+"', got:\n["+execResult+"]");
+
+    var noPlus = "#END_NAME  ";
+    execResult = endBlock.exec(noPlus);
+    assert(execResult === null,
+      "Failed on '"+noPlus+"', got:\n["+execResult+"]");
+
+    var noHash = "    +END_NAME  ";
+    execResult = endBlock.exec(noHash);
+    assert(execResult === null,
+      "Failed on '"+noHash+"', got:\n["+execResult+"]");
+
+    var wrongSeparator = "    #+END-NAME  ";
+    execResult = endBlock.exec(wrongSeparator);
+    assert(execResult === null,
+      "Failed on '"+wrongSeparator+"', got:\n["+execResult+"]");
+  });
+
+  it('should properly match dynamic block beginnings', function() {
+    var beginDynamicBlock = tokenRegExps['beginDynamicBlock'];
+    var execResult;
+
+    var allComponents = "    #+BEGIN:   NAME$123:   params go here -l 4 +a  ";
+    execResult = beginDynamicBlock.exec(allComponents);
+    assert(regExpResultEquals(execResult, [allComponents, "    ", "NAME$123:", "params go here -l 4 +a  "]),
+      "Failed on '"+allComponents+"', got:\n["+execResult+"]");
+
+    var noParams = "    #+BEGIN:   NAME   ";
+    execResult = beginDynamicBlock.exec(noParams);
+    assert(regExpResultEquals(execResult, [noParams, "    ", "NAME", ""]),
+      "Failed on '"+noParams+"', got:\n["+execResult+"]");
+
+    var minimal = "#+BEGIN: NAME";
+    execResult = beginDynamicBlock.exec(minimal);
+    assert(regExpResultEquals(execResult, [minimal, "", "NAME", ""]),
+      "Failed on '"+minimal+"', got:\n["+execResult+"]");
+
+    //----- Examples that should not match -----
+    var noPlus = "#BEGIN: NAME   params go here -l 4 +a  ";
+    execResult = beginDynamicBlock.exec(noPlus);
+    assert(execResult === null,
+      "Failed on '"+noPlus+"', got:\n["+execResult+"]");
+
+    var noHash = "    +BEGIN: NAME   params go here -l 4 +a  ";
+    execResult = beginDynamicBlock.exec(noHash);
+    assert(execResult === null,
+      "Failed on '"+noHash+"', got:\n["+execResult+"]");
+
+    var wrongSeparator = "    #+BEGIN_NAME   params go here -l 4 +a  ";
+    execResult = beginDynamicBlock.exec(wrongSeparator);
+    assert(execResult === null,
+      "Failed on '"+wrongSeparator+"', got:\n["+execResult+"]");
+  });
+
+  it('should properly match dynamic block endings', function() {
+    var endDynamicBlock = tokenRegExps['endDynamicBlock'];
+    var execResult;
+
+    var indented = "   \t  #+END:   ";
+    execResult = endDynamicBlock.exec(indented);
+    assert(regExpResultEquals(execResult, [indented, "   \t  "]),
+      "Failed on '"+indented+"', got:\n["+execResult+"]");
+
+    var minimal = "#+END:";
+    execResult = endDynamicBlock.exec(minimal);
+    assert(regExpResultEquals(execResult, [minimal, ""]),
+      "Failed on '"+minimal+"', got:\n["+execResult+"]");
+
+    //----- Examples that should not match -----
+    var noHash = "+END:";
+    execResult = endDynamicBlock.exec(noHash);
+    assert(regExpResultEquals(execResult, null),
+      "Failed on '"+noHash+"', got:\n["+execResult+"]");
+
+    var noPlus = "#END:";
+    execResult = endDynamicBlock.exec(noPlus);
+    assert(regExpResultEquals(execResult, null),
+      "Failed on '"+noPlus+"', got:\n["+execResult+"]");
+
+    var noColon = "#+END";
+    execResult = endDynamicBlock.exec(noColon);
+    assert(regExpResultEquals(execResult, null),
+      "Failed on '"+noColon+"', got:\n["+execResult+"]");
+
+    var somethingAfter = "   \t  #END:  hi ";
+    execResult = endDynamicBlock.exec(somethingAfter);
+    assert(regExpResultEquals(execResult, null),
+      "Failed on '"+somethingAfter+"', got:\n["+execResult+"]");
+  });
+
+  it('should properly match directives', function() {
+    var directive = tokenRegExps['directive'];
+    var execResult;
+
+    var allComponents = "    #+NAME$123::   params go here -l 4 +a  ";
+    execResult = directive.exec(allComponents);
+    assert(regExpResultEquals(execResult, [allComponents, "    ", "NAME$123:", "params go here -l 4 +a  "]),
+      "Failed on '"+allComponents+"', got:\n["+execResult+"]");
+
+    var noParams = "    #+NAME:   ";
+    execResult = directive.exec(noParams);
+    assert(regExpResultEquals(execResult, [noParams, "    ", "NAME", ""]),
+      "Failed on '"+noParams+"', got:\n["+execResult+"]");
+
+    var minimal = "#+NAME:";
+    execResult = directive.exec(minimal);
+    assert(regExpResultEquals(execResult, [minimal, "", "NAME", ""]),
+      "Failed on '"+minimal+"', got:\n["+execResult+"]");
+
+    //----- Examples that should not match -----
+    var noName = "    #+   params go here -l 4 +a  ";
+    execResult = directive.exec(noName);
+    assert(execResult === null,
+      "Failed on '"+noName+"', got:\n["+execResult+"]");
+
+    var noPlus = "#NAME:   params go here -l 4 +a  ";
+    execResult = directive.exec(noPlus);
+    assert(execResult === null,
+      "Failed on '"+noPlus+"', got:\n["+execResult+"]");
+
+    var noHash = "    +NAME:   params go here -l 4 +a  ";
+    execResult = directive.exec(noHash);
+    assert(execResult === null,
+      "Failed on '"+noHash+"', got:\n["+execResult+"]");
+  });
+
+  it('should properly match preformatted blocks', function() {
     var preformatted = tokenRegExps['preformatted'];
     var execResult;
 
@@ -516,7 +704,7 @@ describe('Token-matching Regular Expressions', function() {
       "Failed on '"+noLeadingColon+"', got:\n["+execResult+"]");
   });
 
-  it('should properly parse blank lines', function() {
+  it('should properly match blank lines', function() {
     var blank = tokenRegExps['blank'];
     var execResult;
 
@@ -546,7 +734,7 @@ describe('Token-matching Regular Expressions', function() {
     assert(execResult === null, "Failed on 'a', got:\n["+execResult+"]");
   });
 
-  it('should properly parse horizontal rules', function() {
+  it('should properly match horizontal rules', function() {
     var hRule = tokenRegExps['horizontalRule'];
     var execResult;
 
@@ -582,7 +770,7 @@ describe('Token-matching Regular Expressions', function() {
       "Failed on '"+somethingBeforeHyphens+"', got:\n["+execResult+"]");
   });
 
-  it('should properly parse comments', function() {
+  it('should properly match comments', function() {
     var comment = tokenRegExps['comment'];
     var execResult;
 
@@ -618,7 +806,7 @@ describe('Token-matching Regular Expressions', function() {
       "Failed on '"+noHashChar+"', got:\n["+execResult+"]");
   });
 
-  it('should properly parse paragraph lines', function() {
+  it('should properly match paragraph lines', function() {
     var line = tokenRegExps['line'];
     var execResult;
 
